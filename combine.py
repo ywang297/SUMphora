@@ -7,6 +7,7 @@ Created on Wed Sep 19 05:51:12 2018
 
 import pandas as pd
 import pickle 
+import numpy as np
 
 
 jimmy = pd.read_csv("jimmy-choo_reviews.csv")
@@ -81,6 +82,25 @@ sephora = sephora[~sephora['p_category'].isin(remove_list)]
 sephora.to_csv("sephora.csv", index=False, sep=',')
 
 sephora.to_pickle("sephora.p")
+
+
+sephora["r_helpful"] = sephora.r_helpful.astype(float)
+sephora["r_nothelpful"] = sephora.r_nothelpful.astype(float)
+
+sephora['helpfulrate']= np.where((sephora['r_helpful']+sephora['r_nothelpful'])==0,-1, sephora['r_helpful']/(sephora['r_helpful']+sephora['r_nothelpful'])) 
+
+sephora['numvote'] = sephora["r_helpful"]+sephora["r_nothelpful"] 
+
+sephora_labeled =sephora[sephora.numvote>0]
+
+sephora_nolabel =sephora[sephora.numvote==0]
+
+
+sephora_labeled.numvote.describe()
+
+sephora_labeled.to_pickle("sephora_labeled.p")
+
+sephora_nolabel.to_pickle("sephora_nolabel.p")
 
 
 
