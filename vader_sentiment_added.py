@@ -10,31 +10,35 @@ Created on Wed Sep 19 23:39:56 2018
 
 import pickle
 
-import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
 sia = SIA()
 
-sephora = pickle.load(open("/Users/yishu/Documents/insight/sephora_retry.p", "rb"))
+sephora_labeled = pickle.load(open("/Users/yishu/Documents/insight/sephora_labeled.p", "rb"))
 
-sephora = pd.DataFrame(sephora)
+sephora_labeled = pd.DataFrame(sephora_labeled)
 
-print(sephora.head())
+sephora_nolabel = pickle.load(open("/Users/yishu/Documents/insight/sephora_nolabel.p", "rb"))
 
-list(sephora) #list all variable names in a dataframe
+sephora_nolabel = pd.DataFrame(sephora_nolabel)
 
-sephora.info()
 
-sephora['p_lovecount'].describe()
+print(sephora_labeled.head())
 
-sephora.describe().transpose() ## descriptive stats of the variables having numeric values
+list(sephora_labeled) #list all variable names in a dataframe
+
+sephora_labeled.info()
+
+sephora_labeled['p_lovecount'].describe()
+
+sephora_labeled.describe().transpose() ## descriptive stats of the variables having numeric values
 
 
 
 results_seph = [] ## To keep the dictionaries of scores for all tip text
-for i in tqdm(np.arange(len(sephora))):
-    results_seph.append(sia.polarity_scores(sephora.loc[i, 'r_review'])) 
+for idx in tqdm(sephora_labeled.index.values):
+    results_seph.append(sia.polarity_scores(sephora_labeled.loc[idx,'r_review'])) 
 ## The loop above takes 13 seconds on my computer. 
     
 ## Transform the result to dataframe
@@ -42,15 +46,29 @@ results_seph = pd.DataFrame(results_seph)
 
 ## Combine the results with the original data
 
-sephora_sent = pd.concat([sephora, results_seph], axis=1)   
-sephora_sent.to_pickle("/Users/yishu/Documents/insight/sephora_sentiment.p")
+sephora_labeled_sent = pd.concat([sephora_labeled, results_seph], axis=1)   
 
-sephora_sent['compound'].describe().transpose()
+sephora_labeled_sent = sephora_labeled_sent[["r_review","p_reviews_recommend", "p_star","helpfulrate","review_length", "bi_helpful", "compound", "neg","neu","pos"]]
+
+sephora_labeled_sent.to_pickle("/Users/yishu/Documents/insight/sephora_labeled_sent.p")
+
+sephora_labeled_sent['compound'].describe().transpose()
 
 
-sephora_sent.info()
 
 
+results_seph_nolabel = [] ## To keep the dictionaries of scores for all tip text
+for idx in tqdm(sephora_nolabel.index.values):
+    results_seph_nolabel.append(sia.polarity_scores(sephora_nolabel.loc[idx, 'r_review'])) 
+
+results_seph_nolabel = pd.DataFrame(results_seph_nolabel) 
+
+sephora_nolabel_sent = pd.concat([sephora_nolabel, results_seph_nolabel], axis=1)   
+
+
+sephora_nolabel_sent = sephora_nolabel_sent[["r_review","p_reviews_recommend", "p_star","helpfulrate","review_length", "bi_helpful", "compound", "neg","neu","pos"]]
+
+sephora_nolabel_sent.to_pickle("/Users/yishu/Documents/insight/sephora_nolabel_sent.p")
 
 
 
