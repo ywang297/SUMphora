@@ -11,6 +11,7 @@ Created on Wed Sep 19 23:39:56 2018
 import pickle
 
 import pandas as pd
+import numpy as np
 from tqdm import tqdm
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
 sia = SIA()
@@ -50,9 +51,13 @@ sephora_labeled_sent = pd.concat([sephora_labeled, results_seph], axis=1)
 
 sephora_labeled_sent = sephora_labeled_sent[["r_review","p_reviews_recommend", "p_star","helpfulrate","review_length", "bi_helpful", "compound", "neg","neu","pos"]]
 
-sephora_labeled_sent.to_pickle("/Users/yishu/Documents/insight/sephora_labeled_sent.p")
-
 sephora_labeled_sent['compound'].describe().transpose()
+
+sephora_labeled_sent.info()
+
+sephora_labeled_sent = sephora_labeled_sent[np.isfinite(sephora_labeled_sent['bi_helpful'])]
+
+sephora_labeled_sent.to_pickle("/Users/yishu/Documents/insight/sephora_labeled_sent.p")
 
 
 
@@ -67,6 +72,11 @@ sephora_nolabel_sent = pd.concat([sephora_nolabel, results_seph_nolabel], axis=1
 
 
 sephora_nolabel_sent = sephora_nolabel_sent[["r_review","p_reviews_recommend", "p_star","helpfulrate","review_length", "bi_helpful", "compound", "neg","neu","pos"]]
+
+sephora_nolabel_sent.info()
+
+sephora_nolabel_sent = sephora_nolabel_sent[np.isfinite(sephora_nolabel_sent['bi_helpful'])]
+
 
 sephora_nolabel_sent.to_pickle("/Users/yishu/Documents/insight/sephora_nolabel_sent.p")
 
