@@ -8,6 +8,7 @@ Created on Wed Sep 19 05:51:12 2018
 import pandas as pd
 import pickle 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 jimmy = pd.read_csv("jimmy-choo_reviews.csv")
@@ -89,18 +90,58 @@ sephora["r_nothelpful"] = sephora.r_nothelpful.astype(float)
 
 sephora['helpfulrate']= np.where((sephora['r_helpful']+sephora['r_nothelpful'])==0,-1, sephora['r_helpful']/(sephora['r_helpful']+sephora['r_nothelpful'])) 
 
+sephora.helpfulrate.describe()
+
+
+sephora[sephora["r_nothelpful"]>100].describe().transpose()
+
+outlier_dat =sephora[sephora["r_nothelpful"]>100]
+
+sephora_test = sephora.merge(outlier_dat, how='left', indicator=True)
+sephora_test = sephora_test[sephora_test['_merge'] == 'left_only']
+
+sephora =sephora_test 
+
+
+sephora["bi_helpful"]= np.where(sephora["helpfulrate"] > 0.7,1,0)
+
+sephora.bi_helpful.sum()
+
 sephora['numvote'] = sephora["r_helpful"]+sephora["r_nothelpful"] 
+
+sephora["review_length"]=sephora["r_review"].apply(lambda x:len(x.split()))
+
+sephora.review_length.describe()
+
+
+unique = set(sephora["r_review"]) 
+len(unique) ## number of unique words in the review data 
+
+
+
 
 sephora_labeled =sephora[sephora.numvote>0]
 
 sephora_nolabel =sephora[sephora.numvote==0]
 
+sephora_labeled.bi_helpful.sum()
+
+sephora_labeled.helpfulrate.describe()
+
+plt.hist(sephora_labeled.helpfulrate)
+
+
+
+sephora_labeled.info()
 
 sephora_labeled.numvote.describe()
 
-sephora_labeled.to_pickle("sephora_labeled.p")
+sephora.to_pickle("/Users/yishu/Documents/insight/sephora.p")
 
-sephora_nolabel.to_pickle("sephora_nolabel.p")
+sephora_labeled.to_pickle("/Users/yishu/Documents/insight/sephora_labeled.p")
+
+sephora_nolabel.to_pickle("/Users/yishu/Documents/insight/sephora_nolabel.p")
+
 
 
 
