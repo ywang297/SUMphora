@@ -27,7 +27,7 @@ class SephoraSpider(Spider):
 		#brand_links = ["/fenty-beauty-rihanna", "/kiehls", "/lancome", "/estee-lauder", "/the-ordinary",
 		#"/shiseido", "/sk-ii", "/clinique", "/benefit-cosmetics", "dr-jart", "/chanel", "/nars",
 		#"/laneige", "/urban-decay", "/bobbi-brown"]
-		brand_links = ["/charlotte tilbury"]
+		brand_links = ["/charlotte-tilbury"]
 		brand_links = [x + "?products=all" for x in brand_links]
 
 		#this scrapes only the brands inside brand_links
@@ -83,15 +83,15 @@ class SephoraSpider(Spider):
 		p_star = response.meta['p_star']
 		brand_name = response.meta['brand_name']
 
-		p_category = response.xpath('//button[@class="css-1euk4ns"]/text()').extract_first() ## css-u2mtre old
+		p_category = response.xpath('//button[@class="css-1euk4ns"]/text()').extract_first() ## link box
 		print(p_category)
 		try:
-			p_price = response.xpath('//div[@class="css-n8yjg7"]/text()').extract()  ## css-18suhml old
+			p_price = response.xpath('//div[@class="css-mmttsj"]/text()').extract()  ## price box
 			p_price = p_price[0]
 		except:
 			p_price = None
 
-		p_num_reviews = response.xpath('//span[@class="css-mmttsj"]/text()').extract() ## css-1dz7b4e  old
+		p_num_reviews = response.xpath('//span[@class="css-1qfwl2b"]/text()').extract() ## text
 		p_num_reviews = p_num_reviews[0]
 		p_num_reviews = p_num_reviews.replace('s', '')
 		p_num_reviews = p_num_reviews.replace(' review', '')

@@ -27,7 +27,7 @@ class SephoraSpider(Spider):
 		#brand_links = ["/fenty-beauty-rihanna", "/kiehls", "/lancome", "/estee-lauder", "/the-ordinary",
 		#"/shiseido", "/sk-ii", "/clinique", "/benefit-cosmetics", "dr-jart", "/chanel", "/nars",
 		#"/laneige", "/urban-decay", "/bobbi-brown"]
-		brand_links = ["/clinique"]
+		brand_links = ["/charlotte-tilbury"]
 		brand_links = [x + "?products=all&pageSize=300" for x in brand_links]
 
 		#this scrapes only the brands inside brand_links
