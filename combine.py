@@ -2,7 +2,7 @@
 """
 Created on Wed Sep 19 05:51:12 2018
 
-@author: Yishu
+@author: yishu
 """
 
 import pandas as pd
@@ -106,6 +106,10 @@ sephora =sephora_test
 sephora["bi_helpful"]= np.where(sephora["helpfulrate"] > 0.7,1,0)
 
 sephora.bi_helpful.sum()
+
+sephora["very_helpful"]= np.where(sephora["helpfulrate"] == 1,1,0)
+
+sephora.very_helpful.sum()
 
 sephora['numvote'] = sephora["r_helpful"]+sephora["r_nothelpful"] 
 
