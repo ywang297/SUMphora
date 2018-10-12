@@ -1,1 +1,4 @@
 .spyproject
+.Bag_of_Words_randomF.csv
+.ipynb_checkpoints/
+__pycache__/
