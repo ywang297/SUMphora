@@ -1,0 +1,7 @@
+Run the following in terminal:
+
+scrapy runspider sephora_spider2.py -o kiehls_reviews.csv
+
+
+To change to another brand, need to change brand_links=[...] in line 30 of sephora_spider2.py
+also change the output file name in line 23 of pipelines.py
